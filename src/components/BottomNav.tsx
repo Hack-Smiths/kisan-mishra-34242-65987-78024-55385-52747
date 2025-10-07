@@ -8,7 +8,6 @@ const navItems = [
   { path: '/market', label: 'Market', icon: TrendingUp },
   { path: '/schemes', label: 'Schemes', icon: FileText },
   { path: '/support-history', label: 'Help', icon: HelpCircle },
-  { path: '/history', label: 'History', icon: History },
 ];
 
 interface BottomNavProps {
@@ -22,7 +21,7 @@ export function BottomNav({ onVoiceClick, isListening = false, hasMessages = fal
 
   return (
     <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-card border-t shadow-2xl">
-      <div className="grid grid-cols-6 gap-1 px-3 py-2">
+      <div className="grid grid-cols-5 gap-1 px-3 py-2">
         {/* First two items */}
         {navItems.slice(0, 2).map((item) => {
           const Icon = item.icon;
@@ -50,8 +49,8 @@ export function BottomNav({ onVoiceClick, isListening = false, hasMessages = fal
           );
         })}
 
-        {/* Center Voice Button - Takes more space */}
-        <div className="col-span-2 flex items-center justify-center">
+        {/* Center Voice Button */}
+        <div className="flex items-center justify-center">
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={onVoiceClick}
@@ -86,7 +85,7 @@ export function BottomNav({ onVoiceClick, isListening = false, hasMessages = fal
           </motion.button>
         </div>
 
-        {/* Last three items */}
+        {/* Last two items */}
         {navItems.slice(2).map((item) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.path;

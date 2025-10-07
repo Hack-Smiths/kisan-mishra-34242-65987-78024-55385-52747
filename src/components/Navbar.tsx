@@ -54,7 +54,7 @@ export function Navbar() {
           width: isCollapsed ? '80px' : '256px'
         }}
         transition={{ duration: 0.3 }}
-        className="hidden lg:flex flex-col bg-card border-r min-h-screen sticky top-0 shadow-lg"
+        className="hidden lg:flex flex-col bg-card border-r h-screen sticky top-0 shadow-lg"
       >
         {/* Header */}
         <div className="p-6 border-b flex items-center justify-between">
