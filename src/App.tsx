@@ -41,10 +41,10 @@ const ProtectedLayout = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-full">
+    <div className="flex flex-col min-h-screen w-full">
       <TopNavbar />
-      <Navbar />
-      <div className="flex-1 flex flex-col">
+      <div className="flex flex-1 overflow-hidden">
+        <Navbar />
         <div className="flex-1 relative pb-20 lg:pb-0 overflow-auto">
           <Outlet />
         
