@@ -9,8 +9,7 @@ const navItems = [
   { path: '/diagnosis', label: 'Crop Advisory', icon: Camera },
   { path: '/market', label: 'Market Prices', icon: TrendingUp },
   { path: '/schemes', label: 'Govt Schemes', icon: FileText },
-  { path: '/history', label: 'History', icon: History },
-  { path: '/help', label: 'Help', icon: HelpCircle },
+  { path: '/support-history', label: 'Support & History', icon: HelpCircle },
   { path: '/profile', label: 'Profile', icon: User },
 ];
 
@@ -67,24 +66,28 @@ export function Navbar() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <h1 className="text-2xl font-bold text-primary flex items-center gap-2">
+                <button 
+                  onClick={() => navigate('/dashboard')}
+                  className="text-2xl font-bold text-primary flex items-center gap-2 hover:opacity-80 transition-opacity"
+                >
                   🌾 Kisan
-                </h1>
+                </button>
                 <p className="text-xs text-muted-foreground mt-1">
                   Supporting Indian Farmers
                 </p>
               </motion.div>
             )}
             {isCollapsed && (
-              <motion.div
+              <motion.button
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="text-2xl"
+                onClick={() => navigate('/dashboard')}
+                className="text-2xl hover:opacity-80 transition-opacity"
               >
                 🌾
-              </motion.div>
+              </motion.button>
             )}
           </AnimatePresence>
           <Button

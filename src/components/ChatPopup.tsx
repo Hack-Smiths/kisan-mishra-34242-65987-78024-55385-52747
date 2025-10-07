@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { X, Mic, Send, Camera, Volume2, Loader2 } from 'lucide-react';
+import { X, Mic, Send, Camera, Volume2, Loader2, MessageSquare, Type } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ChatMessage } from '@/lib/types';
 import { SpeechRecognitionService, SpeechSynthesisService, isSpeechRecognitionSupported } from '@/lib/speech';
 import { DiagnosisCard } from './DiagnosisCard';
@@ -24,6 +25,7 @@ export function ChatPopup({ isOpen, onClose, onImageUpload }: ChatPopupProps) {
   const [isListening, setIsListening] = useState(false);
   const [interimText, setInterimText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [mode, setMode] = useState<'voice' | 'chat' | 'text'>('voice');
   const scrollRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
@@ -154,18 +156,11 @@ export function ChatPopup({ isOpen, onClose, onImageUpload }: ChatPopupProps) {
             <div className="flex flex-col h-full">
               {/* Header */}
               <div className="flex items-center justify-between p-4 border-b">
-                <div className="flex items-center gap-3 flex-1">
-                  <div className="flex-1">
-                    <h2 className="font-semibold text-lg">Kisan+ Assistant</h2>
-                    {isListening ? (
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground">Listening...</span>
-                        <MicVisualizer isActive={isListening} />
-                      </div>
-                    ) : (
-                      <span className="text-sm text-muted-foreground">Tap mic to speak</span>
-                    )}
-                  </div>
+                <div className="flex-1">
+                  <h2 className="font-semibold text-lg">Kisan+ Assistant</h2>
+                  <span className="text-sm text-muted-foreground">
+                    {mode === 'voice' ? 'Voice mode' : mode === 'chat' ? 'Chat mode' : 'Text mode'}
+                  </span>
                 </div>
                 <Button
                   variant="ghost"
@@ -175,6 +170,26 @@ export function ChatPopup({ isOpen, onClose, onImageUpload }: ChatPopupProps) {
                 >
                   <X className="h-5 w-5" />
                 </Button>
+              </div>
+
+              {/* Mode Tabs */}
+              <div className="px-4 pt-4">
+                <Tabs value={mode} onValueChange={(v) => setMode(v as any)} className="w-full">
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="voice" className="gap-2">
+                      <Mic className="h-4 w-4" />
+                      <span className="hidden sm:inline">Voice</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="chat" className="gap-2">
+                      <MessageSquare className="h-4 w-4" />
+                      <span className="hidden sm:inline">Chat</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="text" className="gap-2">
+                      <Type className="h-4 w-4" />
+                      <span className="hidden sm:inline">Text</span>
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
               </div>
 
               {/* Messages */}
@@ -248,23 +263,26 @@ export function ChatPopup({ isOpen, onClose, onImageUpload }: ChatPopupProps) {
 
               {/* Input */}
               <div className="p-4 border-t bg-card">
-                {!isSpeechRecognitionSupported() && (
+                {mode === 'voice' && !isSpeechRecognitionSupported() && (
                   <p className="text-xs text-muted-foreground mb-2">
                     Voice not available - use text input
                   </p>
                 )}
 
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant={isListening ? "destructive" : "default"}
-                    size="icon"
-                    onClick={handleVoiceClick}
-                    disabled={!isSpeechRecognitionSupported()}
-                    aria-label="Voice input"
-                    className="touch-target shrink-0"
-                  >
-                    <Mic className="h-5 w-5" />
-                  </Button>
+                  {mode === 'voice' && (
+                    <Button
+                      variant={isListening ? "destructive" : "default"}
+                      size="icon"
+                      onClick={handleVoiceClick}
+                      disabled={!isSpeechRecognitionSupported()}
+                      aria-label="Voice input"
+                      className="touch-target shrink-0"
+                    >
+                      <Mic className="h-5 w-5" />
+                      {isListening && <MicVisualizer isActive={isListening} />}
+                    </Button>
+                  )}
 
                   <Button
                     variant="outline"
@@ -280,7 +298,7 @@ export function ChatPopup({ isOpen, onClose, onImageUpload }: ChatPopupProps) {
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleUserInput(inputText)}
-                    placeholder="Type your question..."
+                    placeholder={mode === 'voice' ? 'Or type your question...' : 'Type your question...'}
                     className="flex-1"
                   />
 
@@ -296,7 +314,9 @@ export function ChatPopup({ isOpen, onClose, onImageUpload }: ChatPopupProps) {
                 </div>
 
                 <p className="text-xs text-muted-foreground mt-2 text-center">
-                  Tap & speak — ask about crop, price or schemes
+                  {mode === 'voice' 
+                    ? 'Tap mic to speak or type your question' 
+                    : 'Ask about crops, prices, or government schemes'}
                 </p>
               </div>
             </div>

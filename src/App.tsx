@@ -12,13 +12,15 @@ import Login from "./pages/Login";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import Diagnosis from "./pages/Diagnosis";
-import Market from "./pages/Market";
+import Market from "./pages/MarketNew";
 import Schemes from "./pages/Schemes";
 import History from "./pages/History";
 import Help from "./pages/Help";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import { Navbar } from "./components/Navbar";
+import { TopNavbar } from "./components/TopNavbar";
+import SupportHistory from "./pages/SupportHistory";
 
 const queryClient = new QueryClient();
 
@@ -39,10 +41,12 @@ const ProtectedLayout = () => {
   };
 
   return (
-    <div className="flex min-h-screen w-full">
-      <Navbar />
-      <div className="flex-1 relative pb-20 lg:pb-0">
-        <Outlet />
+    <div className="flex flex-col min-h-screen w-full">
+      <TopNavbar />
+      <div className="flex flex-1 overflow-hidden">
+        <Navbar />
+        <div className="flex-1 relative pb-20 lg:pb-0 overflow-auto">
+          <Outlet />
         
         {/* Bottom Navigation - Mobile/Tablet */}
         <BottomNav 
@@ -55,6 +59,7 @@ const ProtectedLayout = () => {
           onClose={() => setIsChatOpen(false)}
           onImageUpload={handleImageUpload}
         />
+        </div>
       </div>
     </div>
   );
@@ -77,6 +82,7 @@ const App = () => (
             <Route path="/schemes" element={<Schemes />} />
             <Route path="/history" element={<History />} />
             <Route path="/help" element={<Help />} />
+            <Route path="/support-history" element={<SupportHistory />} />
             <Route path="/profile" element={<Profile />} />
           </Route>
           <Route path="*" element={<NotFound />} />
